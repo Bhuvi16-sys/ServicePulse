@@ -119,8 +119,8 @@ def generate_html_report(db_path, output_dir="reports"):
 if __name__ == "__main__":
     # Define the path to the database since your function requires it
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Point directly to the root folder where the database is located
-    DB_PATH = os.path.join(BASE_DIR, 'servicepulse.db')
+    # Point directly to the database folder
+    DB_PATH = os.path.join(BASE_DIR, 'database', 'servicepulse.db')
     
     # Call the function
     print("Generating report...")

@@ -121,24 +121,29 @@ def check_service_object(
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Check a website/API.")
-    parser.add_argument("url", help="HTTP/HTTPS URL to check")
-    parser.add_argument(
-        "--timeout",
-        type=float,
-        default=DEFAULT_TIMEOUT,
-        help="Timeout in seconds (default: 10)",
-    )
-
-    args = parser.parse_args()
-
-    result = check_service(args.url, args.timeout)
-
-    print(f"Status: {result['status']}")
-    print(f"Status Code: {result['status_code']}")
-    print(f"Response Time: {result['response_time']} ms")
-
-    if result["error"]:
-        print(f"Error: {result['error']}")
+    from database.db import get_services, save_monitoring_result
+    
+    print("Fetching services from the database...")
+    services = get_services()
+    
+    if not services:
+        print("No services found in database.")
+    else:
+        for svc in services:
+            service_id = svc[0]
+            service_name = svc[1]
+            url = svc[2]
+            
+            print(f"Pinging {service_name} at {url}...")
+            result = check_service(url)
+            
+            # Pass the live data to Member 3's DB function
+            save_monitoring_result(
+                service_id=service_id,
+                status=result['status'],
+                status_code=result['status_code'],
+                response_time=result['response_time']
+            )
+            print(f"  -> Saved to database: {result['status']} ({result['response_time']} ms)")
+            
+        print("All live network checks successfully saved!")
