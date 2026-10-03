@@ -32,3 +32,39 @@ ServicePulse/
 ├── main.py            # Main entry point of the application
 ├── servicepulse.db    # SQLite database file
 └── readme.md          # Project documentation
+```
+⚙️ Installation & Setup   
+Clone the repository:   
+
+Bash
+git clone [https://github.com/Bhuvi16-sys/ServicePulse.git](https://github.com/Bhuvi16-sys/ServicePulse.git)
+cd ServicePulse
+Set up a virtual environment (Optional but recommended):   
+
+Bash
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+Install dependencies:   
+
+Bash
+pip install -r requirements.txt
+Initialize the Database:
+Populate the database with initial data using the injection script:
+
+Bash
+python inject_data.py
+💻 Usage
+To start the ServicePulse application, run the main script from the root directory:
+
+Bash
+python main.py
+👥 Contributors
+@Bhuvi16-sys
+
+@aditi-raj-dev
+
+@Ashish-Galaxy07   
+
+@NishthaMaurya06   
+
+@harshityagi811
