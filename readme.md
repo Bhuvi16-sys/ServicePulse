@@ -1,4 +1,5 @@
-ServicePulse
+```ServicePulse```
+
 ServicePulse is a Python-based system designed for comprehensive service monitoring, automation, and analytics. It features a modular architecture that handles real-time monitoring, data injection, and automated reporting, all accessible through a graphical user interface.
 
 🚀 Features
