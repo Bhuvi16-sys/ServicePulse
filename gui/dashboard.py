@@ -24,6 +24,11 @@ class Dashboard:
         self.create_service_table()
 
         self.load_services()
+        self.auto_refresh()
+
+    def auto_refresh(self):
+        self.load_services()
+        self.root.after(5000, self.auto_refresh)
 
     # ---------------------------------------------------------
     # HEADER
@@ -168,8 +173,6 @@ class Dashboard:
         self.up_label.config(text=str(up))
         self.down_label.config(text=str(down))
 
-        # Clear search bar upon reload
-        self.search_entry.delete(0, tk.END)
 
     # ---------------------------------------------------------
     # SEARCH & ON-DEMAND PING
