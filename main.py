@@ -3,6 +3,7 @@ import sqlite3
 import sys
 import os
 import threading
+from automation.scheduler import MonitoringScheduler
 
 # 1. Path Configuration
 # Ensures Python can find all the folders (gui, database, analytics, etc.)
@@ -57,6 +58,10 @@ def main():
     # Their continuous pinging script would be started here as a background thread
     # e.g., threading.Thread(target=start_monitoring_loop, daemon=True).start()
     
+    # Start automatic monitoring in the background
+    scheduler = MonitoringScheduler(interval=60)
+    scheduler.start()
+
     print("Launching ServicePulse GUI...")
     root = tk.Tk()
     
