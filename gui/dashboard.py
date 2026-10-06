@@ -83,6 +83,11 @@ class Dashboard:
         self.create_status_bar()
 
         self.load_services()
+        self.auto_refresh()
+
+    def auto_refresh(self):
+        self.load_services()
+        self.root.after(5000, self.auto_refresh)
 
     # ---------------------------------------------------------
     # STYLES
@@ -210,6 +215,10 @@ class Dashboard:
                        font=("Segoe UI", 9), bg="#e5e7eb", fg=MUTED, padx=14, pady=4)
         bar.pack(fill="x", side="bottom")
 
+    def load_services(self):
+        services = get_services()
+        self.populate_table(services)
+
     # ---------------------------------------------------------
     # POPULATE TABLE (shared by load and search)
     # ---------------------------------------------------------
@@ -252,23 +261,27 @@ class Dashboard:
             marker = {"UP": "\u25CF UP", "DOWN": "\u25CF DOWN"}.get(status, status)
             self.tree.insert("", "end", values=(service_id, service_name, url, marker,
                                                 response_time, uptime), tags=(tag,))
+            
+        # FIX: Define total as the length of the loaded services list
+        total = len(services)
+        
+        self.total_label.config(text=str(total))
+        self.up_label.config(text=str(up))
+        self.down_label.config(text=str(down))
+        
+        # Optionally, update the uptime and average labels if you want those populated on the main dashboard
+        if all_checks > 0:
+            overall_uptime = f"{(all_ups / all_checks) * 100:.1f}%"
+            self.uptime_label.config(text=overall_uptime)
+        else:
+            self.uptime_label.config(text="0%")
+            
+        if up_times:
+            avg_resp = fmt_ms(sum(up_times) / len(up_times))
+            self.avg_label.config(text=avg_resp)
+        else:
+            self.avg_label.config(text="-")
 
-        if update_cards:
-            self.total_label.config(text=str(len(services)))
-            self.up_label.config(text=str(up))
-            self.down_label.config(text=str(down))
-            self.uptime_label.config(
-                text=f"{all_ups / all_checks * 100:.1f}%" if all_checks else "-")
-            self.avg_label.config(
-                text=fmt_ms(sum(up_times) / len(up_times)) if up_times else "-")
-
-    # ---------------------------------------------------------
-    # LOAD SERVICES
-    # ---------------------------------------------------------
-    def load_services(self):
-        self.populate_table(get_services(), update_cards=True)
-        self.search_entry.delete(0, tk.END)
-        self.status_var.set(f"Last refreshed: {datetime.now():%Y-%m-%d %H:%M:%S}")
 
     # ---------------------------------------------------------
     # SEARCH & ON-DEMAND PING
@@ -487,4 +500,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = Dashboard(root)
     root.mainloop()
-    
